@@ -2,9 +2,8 @@ import os
 
 import pandas as pd
 import numpy as np
-import sqlalchemy
 
-from sqlalchemy import func
+import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
@@ -89,10 +88,6 @@ def samples(sample):
     # Filter the data based on the sample number and
     # only keep rows with values above 1
     sample_data = df.loc[df[sample] > 1, ["otu_id", "otu_label", sample]]
-
-    # Sort by sample
-    sample_data.sort_values(by=sample, ascending=False, inplace=True)
-
     # Format the data to send as json
     data = {
         "otu_ids": sample_data.otu_id.values.tolist(),
@@ -103,4 +98,7 @@ def samples(sample):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Bind to PORT if defined, otherwise default to 5000.
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
+    # app.run()
